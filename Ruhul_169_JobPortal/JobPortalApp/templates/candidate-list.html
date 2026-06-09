@@ -1,0 +1,40 @@
+{% extends 'master/base.html' %}
+
+{% block content %}
+{% include 'master/messages.html' %}
+
+<h1>Candidate List : {{job_data.title}}</h1>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">SI</th>
+      <th scope="col">Name</th>
+      <th scope="col">Skill Set</th>
+      <th scope="col">Resume</th>
+      <th scope="col">Applied Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    {% for data in candidate_data %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{data.applied_by.seeker.display_name}}</td>
+      <td>{{data.applied_by.skill_set}}</td>
+      <td>{{data.applied_at}}</td>
+      <td>
+      {% if data.resume %}
+        <a href="{{data.resume.url}}" target="_blank">Resume</a>
+      {% endif %}
+        </td>
+    </tr>
+
+    {% endfor %}
+        
+
+  </tbody>
+</table>
+        
+{% endblock content %}

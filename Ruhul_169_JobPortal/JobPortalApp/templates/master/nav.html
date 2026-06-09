@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #054b7e;" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'browse_post_view' %}">Browse Job</a>
+        </li>
+        {% if request.user.is_authenticated %}
+        {% if request.user.user_type == 'Seeker' %}
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{% url 'dashboard_page' %}">Dashboard</a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{% url 'my_application' %}">My Application</a>
+        </li>
+
+          
+        {% endif %}
+          
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profile_view' %}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout_page' %}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login_page' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register_page' %}">Register</a>
+        </li>
+            
+        {% endif %}  
+      </ul>
+
+    </div>
+  </div>
+</nav>

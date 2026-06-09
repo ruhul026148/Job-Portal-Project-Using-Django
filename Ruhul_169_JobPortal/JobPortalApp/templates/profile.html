@@ -1,0 +1,32 @@
+{% extends 'master/base.html' %}
+
+{% block content %}
+<div class="container">
+
+{% include 'master/messages.html' %}
+<h1>Profile Informathion</h1>
+<p>Name : {{request.user.display_name}}</p>
+<p>Email : {{request.user.email}}</p>
+<p>User Type : {{request.user.user_type}}</p>
+
+
+{% if request.user.user_type == 'Recruiter' %}
+<p>Company Logo = <img src="{{request.user.recruiter_profile.logo.url}}" width="50" height="50" alt=""></p>
+<p>Company Name = {{request.user.recruiter_profile.company_name}}</p>
+<p>Address : {{request.user.recruiter_profile.address}}</p>
+<p>Contact : {{request.user.recruiter_profile.contact}}</p>
+{% else %}
+
+<p>Image = <img src="{{request.user.seeker_profile.profile_image.url}}" alt=""></p>
+<p>Skill Set = {{request.user.seeker_profile.skill_set}}</p>
+<p>Address : {{request.user.seeker_profile.address}}</p>
+<p>Contact : {{request.user.seeker_profile.contact}}</p>
+    
+{% endif %}
+    
+
+<a href="{% url 'update_profile_view' %}" class="btn btn-secondary" >Update Profile</a>
+
+</div>
+        
+{% endblock content %}
