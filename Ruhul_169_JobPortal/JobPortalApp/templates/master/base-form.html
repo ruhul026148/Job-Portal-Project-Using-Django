@@ -1,21 +1,336 @@
 {% extends 'master/base.html' %}
 {% load crispy_forms_tags %}
 
-    {% block title %}
-   {{title}}
-    {% endblock title %}
-{% block content %}
-<div class="container">
-    {% include 'master/messages.html' %}
-    <h1>{{form_title}}</h1>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-  <div class="mb-3">
-   {{form_data|crispy}}
-  </div>
+{% block title %}
+    {{ title }}
+{% endblock title %}
 
-  <button type="submit" class="btn btn-primary">{{form_btn}}</button>
-</form>
-</div> 
+{% block content %}
+
+<style>
+    .auth-page {
+        min-height: 85vh;
+        padding: 45px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f4f7fc;
+    }
+
+    .auth-wrapper {
+        width: 100%;
+        max-width: 1050px;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        background: #ffffff;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(25, 42, 70, 0.10);
+    }
+
+    .auth-banner {
+        padding: 55px 40px;
+        background: linear-gradient(145deg, #123c69, #2563eb);
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-banner::before {
+        content: "";
+        position: absolute;
+        width: 230px;
+        height: 230px;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 50%;
+        top: -90px;
+        right: -90px;
+    }
+
+    .auth-banner::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50%;
+        bottom: -70px;
+        left: -70px;
+    }
+
+    .auth-brand {
+        font-size: 27px;
+        font-weight: 800;
+        margin-bottom: 35px;
+        letter-spacing: -0.5px;
+    }
+
+    .auth-brand span {
+        color: #93c5fd;
+    }
+
+    .auth-banner h2 {
+        font-size: 34px;
+        line-height: 1.35;
+        font-weight: 750;
+        margin-bottom: 20px;
+    }
+
+    .auth-banner p {
+        color: #e0ecff;
+        line-height: 1.8;
+        font-size: 15px;
+    }
+
+    .auth-benefits {
+        margin-top: 25px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .auth-benefits li {
+        margin-bottom: 16px;
+        font-size: 14px;
+        color: #f0f6ff;
+    }
+
+    .auth-benefits li span {
+        display: inline-flex;
+        width: 25px;
+        height: 25px;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.16);
+    }
+
+    .auth-form-panel {
+        padding: 50px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .auth-form-panel h1 {
+        color: #172b4d;
+        font-size: 30px;
+        font-weight: 750;
+        margin-bottom: 10px;
+    }
+
+    .auth-subtitle {
+        color: #718096;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 28px;
+    }
+
+    .auth-form-panel form label {
+        color: #334155;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .auth-form-panel form input,
+    .auth-form-panel form select,
+    .auth-form-panel form textarea {
+        min-height: 46px;
+        border: 1px solid #dbe3ef;
+        border-radius: 9px;
+        padding: 10px 13px;
+        background-color: #fbfcff;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-form-panel form input:focus,
+    .auth-form-panel form select:focus,
+    .auth-form-panel form textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        background: #ffffff;
+    }
+
+    .auth-form-panel form .form-text,
+    .auth-form-panel form .help-block {
+        font-size: 12px;
+        color: #718096;
+    }
+
+    .auth-submit {
+        width: 100%;
+        min-height: 49px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 9px;
+        color: #ffffff;
+        background: linear-gradient(90deg, #2563eb, #1d4ed8);
+        font-weight: 700;
+        font-size: 15px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-submit:hover {
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(37,99,235,0.25);
+    }
+
+    .auth-switch {
+        text-align: center;
+        color: #718096;
+        font-size: 14px;
+        margin-top: 25px;
+        margin-bottom: 0;
+    }
+
+    .auth-switch a {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .auth-switch a:hover {
+        text-decoration: underline;
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    @media (max-width: 767px) {
+        .auth-page {
+            padding: 25px 12px;
+        }
+
+        .auth-wrapper {
+            grid-template-columns: 1fr;
+            max-width: 520px;
+        }
+
+        .auth-banner {
+            padding: 30px 25px;
+        }
+
+        .auth-brand {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .auth-banner h2 {
+            font-size: 26px;
+        }
+
+        .auth-benefits {
+            margin-top: 12px;
+        }
+
+        .auth-form-panel {
+            padding: 35px 25px;
+        }
+
+        .auth-form-panel h1 {
+            font-size: 26px;
+        }
+    }
+</style>
+
+<div class="auth-page">
+    <div class="auth-wrapper">
+
+        <!-- Left Side: Branding -->
+        <div class="auth-banner">
+
+            <div class="auth-brand">
+                Job<span>Finder.</span>
+            </div>
+
+            {% if is_register %}
+                <h2>Build Your Future, One Opportunity at a Time.</h2>
+
+                <p>
+                    Create your account and take the next step in your
+                    professional journey. Discover opportunities that
+                    match your skills and ambitions.
+                </p>
+            {% else %}
+                <h2>Your Next Career Opportunity Starts Here.</h2>
+
+                <p>
+                    Welcome to your career hub. Sign in to discover
+                    opportunities, connect with employers, and take
+                    control of your professional future.
+                </p>
+            {% endif %}
+
+            <ul class="auth-benefits">
+                <li>
+                    <span>&#10003;</span>
+                    Discover career opportunities
+                </li>
+                <li>
+                    <span>&#10003;</span>
+                    Connect with employers
+                </li>
+                <li>
+                    <span>&#10003;</span>
+                    Manage your career journey
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- Right Side: Authentication Form -->
+        <div class="auth-form-panel">
+
+            {% include 'master/messages.html' %}
+
+            <h1>{{ form_title }}</h1>
+
+            <p class="auth-subtitle">
+                {{ form_subtitle }}
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {{ form_data|crispy }}
+
+                <button type="submit" class="btn auth-submit">
+                    {{ form_btn }}
+                    <span aria-hidden="true">&rarr;</span>
+                </button>
+            </form>
+
+            {% if is_register %}
+                <p class="auth-switch">
+                    Already have an account?
+                    <a href="{% url 'login_page' %}">Sign in</a>
+                </p>
+            {% else %}
+                <p class="auth-switch">
+                    Don't have an account?
+                    <a href="{% url 'register_page' %}">
+                        Create an account
+                    </a>
+                </p>
+            {% endif %}
+
+            <div class="auth-footer">
+                &copy; {% now "Y" %} JobFinder. All rights reserved.
+            </div>
+
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
-    
+```

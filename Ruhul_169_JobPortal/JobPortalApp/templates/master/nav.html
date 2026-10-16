@@ -1,45 +1,213 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #054b7e;" data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+<style>
+    /* Navbar main design */
+    .job-navbar {
+        background: linear-gradient(100deg, #073b65, #075985);
+        padding: 12px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1050;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
+    }
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'browse_post_view' %}">Browse Job</a>
-        </li>
-        {% if request.user.is_authenticated %}
-        {% if request.user.user_type == 'Seeker' %}
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'dashboard_page' %}">Dashboard</a>
-        </li>
-        
-        
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'my_application' %}">My Application</a>
-        </li>
+    .job-navbar .container {
+        max-width: 1320px;
+    }
 
-          
-        {% endif %}
-          
+    /* Brand */
+    .job-navbar .navbar-brand {
+        color: #ffffff;
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: -0.7px;
+        text-decoration: none;
+    }
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile_view' %}">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout_page' %}">Logout</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'login_page' %}">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'register_page' %}">Register</a>
-        </li>
-            
-        {% endif %}  
-      </ul>
+    .job-navbar .brand-highlight {
+        color: #7dd3fc;
+    }
 
+    .job-navbar .brand-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        margin-right: 7px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.14);
+        font-size: 19px;
+    }
+
+    /* Navbar links */
+    .job-navbar .navbar-nav {
+        align-items: center;
+        gap: 5px;
+    }
+
+    .job-navbar .nav-link {
+        color: #e2e8f0;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px 15px !important;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .job-navbar .nav-link:hover,
+    .job-navbar .nav-link:focus {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Highlight important links */
+    .job-navbar .nav-link.nav-cta {
+        background: #ffffff;
+        color: #075985;
+        font-weight: 700;
+        padding: 10px 19px !important;
+    }
+
+    .job-navbar .nav-link.nav-cta:hover {
+        background: #e0f2fe;
+        color: #073b65;
+    }
+
+    .job-navbar .navbar-toggler {
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        padding: 7px 10px;
+    }
+
+    .job-navbar .navbar-toggler:focus {
+        box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.25);
+    }
+
+    .job-navbar .navbar-toggler-icon {
+        filter: none;
+    }
+
+    /* Prevent page content from hiding behind fixed navbar */
+    body {
+        padding-top: 68px;
+    }
+
+    /* Mobile responsive menu */
+    @media (max-width: 991.98px) {
+        .job-navbar {
+            padding: 10px 0;
+        }
+
+        .job-navbar .navbar-collapse {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(3, 35, 62, 0.97);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 12px;
+        }
+
+        .job-navbar .navbar-nav {
+            align-items: stretch;
+            gap: 4px;
+        }
+
+        .job-navbar .nav-link {
+            padding: 11px 13px !important;
+        }
+
+        .job-navbar .nav-link.nav-cta {
+            text-align: center;
+            margin-top: 5px;
+        }
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark job-navbar">
+    <div class="container">
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="{% url 'browse_post_view' %}">
+            <span class="brand-icon">&#128188;</span>Job<span class="brand-highlight">Finder</span>
+        </a>
+
+        <!-- Mobile menu button -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#jobNavbarMenu"
+            aria-controls="jobNavbarMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation links -->
+        <div class="collapse navbar-collapse" id="jobNavbarMenu">
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'browse_post_view' %}">
+                        Browse Jobs
+                    </a>
+                </li>
+
+                {% if request.user.is_authenticated %}
+
+                    {% if request.user.user_type == 'Seeker' %}
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="{% url 'dashboard_page' %}">
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="{% url 'my_application' %}">
+                                My Applications
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{% url 'profile_view' %}">
+                            My Profile
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link nav-cta"
+                           href="{% url 'logout_page' %}">
+                            Logout
+                        </a>
+                    </li>
+
+                {% else %}
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{% url 'login_page' %}">
+                            Login
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link nav-cta"
+                           href="{% url 'register_page' %}">
+                            Get Started
+                        </a>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>

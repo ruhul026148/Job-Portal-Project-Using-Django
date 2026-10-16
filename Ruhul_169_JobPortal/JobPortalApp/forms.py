@@ -3,9 +3,39 @@ from JobPortalApp.models import *
 from django.contrib.auth.forms import UserCreationForm
 
 class RegisterForm(UserCreationForm):
+
     class Meta:
-        model=UserCustomModel
-        fields=['username','email','display_name','user_type','password1','password2']
+        model = UserCustomModel
+
+        fields = [
+            'username',
+            'email',
+            'display_name',
+            'user_type',
+            'password1',
+            'password2',
+        ]
+
+        labels = {
+            'username': 'Username',
+            'email': 'Email Address',
+            'display_name': 'Full Name',
+            'user_type': 'I want to join as',
+        }
+
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'placeholder': 'Choose a username',
+                'autocomplete': 'username',
+            }),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Enter your email address',
+                'autocomplete': 'email',
+            }),
+            'display_name': forms.TextInput(attrs={
+                'placeholder': 'Enter your full name',
+            }),
+        }
 
 
 class RecruiterProfileForm(forms.ModelForm):

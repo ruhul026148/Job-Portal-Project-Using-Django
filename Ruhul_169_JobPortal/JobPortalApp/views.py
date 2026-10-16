@@ -10,42 +10,65 @@ from django.contrib.auth.forms import AuthenticationForm
 # Create your views here.
 
 def register_page(request):
-    if request.method=='POST':
-        form_data=RegisterForm(request.POST)
+    if request.method == 'POST':
+        form_data = RegisterForm(request.POST)
+
         if form_data.is_valid():
             form_data.save()
-            messages.success(request,'Registration SuccessFully')
+            messages.success(
+                request,
+                'Your account has been created successfully! Please log in.'
+            )
             return redirect('login_page')
-            
+    else:
+        form_data = RegisterForm()
 
-    form_data=RegisterForm()
-    context={
-        'form_data':form_data,
-        'form_title':'User Register Form',
-        'form_btn':'Register',
-        'title':'Registration Page',
+    context = {
+        'form_data': form_data,
+        'form_title': 'Create Your Account',
+        'form_subtitle': 'Join our community and discover new career opportunities.',
+        'form_btn': 'Create Account',
+        'title': 'Register | Job Portal',
+        'is_register': True,
     }
-    return render(request,'master/base-form.html',context)
+
+    return render(request, 'master/base-form.html', context)
+
 
 def login_page(request):
-    if request.method=='POST':
-        form_data=AuthenticationForm(request,request.POST)
-        if form_data.is_valid():
-            user=form_data.get_user()
-            if user:
-                login(request,user)
-                messages.success(request,'Login SuccessFully')
-                return redirect('dashboard_page')
-        messages.success(request,'Invalid Crendentails')
+    if request.method == 'POST':
+        form_data = AuthenticationForm(
+            request,
+            data=request.POST
+        )
 
-    form_data=AuthenticationForm()
-    context={
-        'form_data':form_data,
-        'form_title':'User Login Form',
-        'form_btn':'Login',
-        'title':'Login Page',
+        if form_data.is_valid():
+            user = form_data.get_user()
+            login(request, user)
+
+            messages.success(
+                request,
+                f'Welcome back, {user.username}!'
+            )
+            return redirect('dashboard_page')
+        else:
+            messages.error(
+                request,
+                'Invalid username or password. Please try again.'
+            )
+    else:
+        form_data = AuthenticationForm()
+
+    context = {
+        'form_data': form_data,
+        'form_title': 'Welcome Back',
+        'form_subtitle': 'Log in to explore jobs and manage your career.',
+        'form_btn': 'Sign In',
+        'title': 'Login | Job Portal',
+        'is_register': False,
     }
-    return render(request,'master/base-form.html',context)
+
+    return render(request, 'master/base-form.html', context)
 
 @login_required
 def logout_page(request):
@@ -122,7 +145,7 @@ def update_profile_view(request):
         'form_btn':'Update',
         'title':'Profile Page',
     }
-    return render(request,'master/base-form.html',context)
+    return render(request,'master/profile-form.html',context)
 
 
 def browse_post_view(request):
@@ -230,7 +253,7 @@ def update_job_view(request,id):
         'form_btn':'Update',
         'title':'Job Updating Page',
     }
-    return render(request,'master/base-form.html',context)
+    return render(request,'master/profile-form.html',context)
 
 @login_required
 def delete_job_view(request,id):
@@ -270,7 +293,7 @@ def apply_job_view(request, id):
         'form_btn':'Apply',
         'title':'Job Apply Page',
     }
-    return render(request,'master/base-form.html',context)
+    return render(request,'master/profile-form.html',context)
 
 def my_application(request):
     my_application=ApplyingJobModel.objects.filter(applied_by= request.user.seeker_profile)
